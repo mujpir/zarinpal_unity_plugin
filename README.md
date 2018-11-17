@@ -12,6 +12,10 @@ Everything is ok . Hit "update manifest and files" to update your manifest and c
 
 You can now see zarinpal example to know how to use the plugin in your code.
 
+If you wish to change the way Zarinpal activity work or applying your style to activity , you can go and do it here :
+https://github.com/mujpir/UnityZarinpalPurchaseAndroidStudio
+After customizing android part then come back here and change the c# code in unity to make plugin works without any error.
+
 Happy making games.
 
 Mohtaba Pirveisi
