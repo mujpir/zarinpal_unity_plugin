@@ -28,5 +28,5 @@ After customizing android part of the plugin ,  then come back here and change t
 
 Happy making games.
 
-Mohtaba Pirveisi
+Mojtaba Pirveisi
 Game developer at Darbache Studio.
