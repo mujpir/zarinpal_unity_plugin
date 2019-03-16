@@ -16,19 +16,32 @@ namespace Soomla
 	static string outputFile = Path.Combine(Application.dataPath, "Plugins/Android/AndroidManifest.xml");
 	public static void GenerateManifest()
 	{
-		// only copy over a fresh copy of the AndroidManifest if one does not exist
-		if (!File.Exists(outputFile))
-		{
-#if UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_5_0 || UNITY_5_1
-		var inputFile = Path.Combine(EditorApplication.applicationContentsPath, "PlaybackEngines/androidplayer/AndroidManifest.xml");
+            // only copy over a fresh copy of the AndroidManifest if one does not exist
+            if (!File.Exists(outputFile))
+	    {
+		    
+#if UNITY_EDITOR_OSX
+		    var inputFile = Path.Combine(EditorApplication.applicationPath,
+			    "../PlaybackEngines/androidplayer/Apk/AndroidManifest.xml");
+#elif UNITY_4_5 || UNITY_4_6 || UNITY_4_7 || UNITY_5_0 || UNITY_5_1
+		var inputFile =
+                Path.Combine(EditorApplication.applicationContentsPath, "PlaybackEngines/androidplayer/AndroidManifest.xml");
 #elif UNITY_5_2 || (UNITY_5_3 && UNITY_EDITOR_WIN)
-		var inputFile = Path.Combine(EditorApplication.applicationContentsPath, "PlaybackEngines/androidplayer/Apk/AndroidManifest.xml");
-#else				
-		var inputFile = Path.Combine(EditorApplication.applicationPath, "../Data/PlaybackEngines/androidplayer/Apk/AndroidManifest.xml");
+		var inputFile =
+                Path.Combine(EditorApplication.applicationContentsPath, "PlaybackEngines/androidplayer/Apk/AndroidManifest.xml");
+#elif UNITY_2017_1_OR_NEWER
+                var inputFile =
+                    Path.Combine(EditorApplication.applicationPath, "../Data/PlaybackEngines/AndroidPlayer/Apk/AndroidManifest.xml");
+#else
+	        var inputFile = Path.Combine(EditorApplication.applicationPath,
+	            "../Data/PlaybackEngines/androidplayer/Apk/AndroidManifest.xml");
 #endif
-		File.Copy(inputFile, outputFile);
-	}
-		UpdateManifest();
+
+
+	        File.Copy(inputFile, outputFile);
+	    }
+
+	    UpdateManifest();
 	}
 
 		private static string _namespace = "";

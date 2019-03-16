@@ -57,11 +57,61 @@ public class Zarinpal : MonoBehaviour
         }
     }
 
+
+    public static string PurchasingItemID
+    {
+        get
+        {
+            if (_platform == null)
+            {
+                return null;
+            }
+            return _platform.PurchasingItemID;
+        }
+    }
+
     /// <summary>
     /// Initialize Zarinpal . Call this once is start up of your game.
     /// </summary>
     public static void Initialize()
     {
+        if (_platform != null)
+        {
+            if (Initialized)
+            {
+                var message = "Zarinpal is already initialized.Please make sure you call 'Initialize' once.";
+                OnStoreInitializeFailed(message);
+                ZarinpalLog.LogWarning(message);
+            }
+            else
+            {
+                var message = "Platform has been created but not initialized . There may be an error. Please see logs for more details";
+                OnStoreInitializeFailed(message);
+                ZarinpalLog.LogError(message);
+            }
+            return;
+        }
+        
+#if UNITY_EDITOR
+        _platform = new ZarinpalEditor();
+#elif UNITY_IOS
+        _platform = ZarinpaliOS.CreateInstance();
+#elif UNITY_ANDROID
+        _platform = ZarinpalAndroid.CreateInstance();
+#endif
+        
+        //Subscribing events
+        _platform.StoreInitialized += OnStoreInitialized;
+        _platform.PurchaseStarted += OnPurchaseStarted;
+        _platform.PurchaseFailedToStart += OnPurchaseFailedToStart;
+        _platform.PurchaseSucceed += OnPurchaseSucceed;
+        _platform.PurchaseFailed += OnPurchaseFailed;
+        _platform.PurchaseCanceled += OnPurchaseCanceled;
+        _platform.PaymentVerificationStarted += OnPaymentVerificationStarted;
+        _platform.PaymentVerificationSucceed += OnPaymentVerificationSucceed;
+        _platform.PaymentVerificationFailed += OnPaymentVerificationFailed;
+        
+        
         if (Initialized)
         {
             var message = "Zarinpal is already initialized.Please make sure you call 'Initialize' once.";
@@ -81,7 +131,7 @@ public class Zarinpal : MonoBehaviour
             return;
         }
 
-        if (string.IsNullOrEmpty(setting.MerchantID) || setting.MerchantID== "YOUR_ZARINPAL_MERCHANT_ID")
+        if (string.IsNullOrEmpty(setting.MerchantID) || setting.MerchantID== "MY_ZARINPAL_MERCHANT_ID")
         {
             var message = "Invalid MerchantID.Please go to menu : Zarinpal/Setting to set a valid merchant id";
             OnStoreInitializeFailed(message);
@@ -91,28 +141,20 @@ public class Zarinpal : MonoBehaviour
 
         var scheme = setting.Scheme;
         var host = setting.Host;
-        if (string.IsNullOrEmpty(setting.Scheme) || string.IsNullOrEmpty(setting.Host))
+        
+#if !UNITY_EDITOR && UNITY_ANDROID
+        if (string.IsNullOrEmpty(setting.Scheme) || string.IsNullOrEmpty(setting.Host)
+            || setting.Scheme=="MY_SCHEME" || setting.Host=="MY_HOST")
         {
             var message = "Scheme or Host Can not be null or Empty.Please go to menu : Zarinpal/Setting to set a valid Scheme and Host";
             OnStoreInitializeFailed(message);
             ZarinpalLog.LogWarning(message);
             return;
         }
-
-#if UNITY_EDITOR
-        _platform = new ZarinpalEditor();
-#elif UNITY_ANDROID
-        _platform = ZarinpalAndroid.CreateInstance();
+#else
+        scheme = string.Empty;
+        host = string.Empty;
 #endif
-        _platform.StoreInitialized += OnStoreInitialized;
-        _platform.PurchaseStarted += OnPurchaseStarted;
-        _platform.PurchaseFailedToStart += OnPurchaseFailedToStart;
-        _platform.PurchaseSucceed += OnPurchaseSucceed;
-        _platform.PurchaseFailed += OnPurchaseFailed;
-        _platform.PurchaseCanceled += OnPurchaseCanceled;
-        _platform.PaymentVerificationStarted += OnPaymentVerificationStarted;
-        _platform.PaymentVerificationSucceed += OnPaymentVerificationSucceed;
-        _platform.PaymentVerificationFailed += OnPaymentVerificationFailed;
 
         if (_platform==null)
         {

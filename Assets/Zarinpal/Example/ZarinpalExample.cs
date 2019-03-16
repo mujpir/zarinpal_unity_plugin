@@ -13,6 +13,7 @@ public class ZarinpalExample : MonoBehaviour
     void Start()
     {
         Zarinpal.StoreInitialized += Zarinpal_StoreInitialized;
+        Zarinpal.StoreInitializeFailed += Zarinpal_StoreInitializeFailed;
         Zarinpal.PurchaseStarted += Zarinpal_PurchaseStarted;
         Zarinpal.PurchaseFailedToStart += Zarinpal_PurchaseFailedToStart;
         Zarinpal.PurchaseSucceed += Zarinpal_PurchaseSucceed;
@@ -26,7 +27,7 @@ public class ZarinpalExample : MonoBehaviour
     void OnDestroy()
     {
         Zarinpal.StoreInitialized -= Zarinpal_StoreInitialized;
-        Zarinpal.StoreInitializeFailed += Zarinpal_StoreInitializeFailed;
+        Zarinpal.StoreInitializeFailed -= Zarinpal_StoreInitializeFailed;
         Zarinpal.PurchaseStarted -= Zarinpal_PurchaseStarted;
         Zarinpal.PurchaseFailedToStart -= Zarinpal_PurchaseFailedToStart;
         Zarinpal.PurchaseSucceed -= Zarinpal_PurchaseSucceed;

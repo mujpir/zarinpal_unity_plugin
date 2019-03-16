@@ -66,17 +66,30 @@ namespace Soomla.Store
 		        new Dictionary<string, string>(),intentElement);
 		    ZarinpalManifestTools.AppendElementIfMissing("category", "android.intent.category.DEFAULT",
 		        new Dictionary<string, string>(), intentElement);
+
+
+		    ZarinpalManifestTools.AddActivity("com.kingcodestudio.unityzarinpaliab.ZarinpalResultActivity", new Dictionary<string, string>()
+		    {
+		        {"theme","@android:style/Theme.DeviceDefault.Light.Dialog.NoActionBar.MinWidth" }
+		    });
+            XmlElement activityResultElement = ZarinpalManifestTools.FindElementWithTagAndName("activity",
+		        "com.kingcodestudio.unityzarinpaliab.ZarinpalResultActivity");
+		    XmlElement intentResultElement = ZarinpalManifestTools.AppendElementIfMissing("intent-filter", null, null, activityResultElement);
+		    ZarinpalManifestTools.AppendElementIfMissing("action", "android.intent.action.VIEW",
+		        new Dictionary<string, string>(), intentResultElement);
+		    ZarinpalManifestTools.AppendElementIfMissing("category", "android.intent.category.DEFAULT",
+		        new Dictionary<string, string>(), intentResultElement);
 		    ZarinpalManifestTools.AppendElementIfMissing("category", "android.intent.category.BROWSABLE",
-		        new Dictionary<string, string>(), intentElement);
+		        new Dictionary<string, string>(), intentResultElement);
 		    var scheme = StoreSettings.Scheme;
 		    var host = StoreSettings.Host;
-		    ZarinpalManifestTools.RemoveElement("data",null, intentElement);
-            ZarinpalManifestTools.AppendElementIfMissing("data", null,
+		    ZarinpalManifestTools.RemoveElement("data", null, intentResultElement);
+		    ZarinpalManifestTools.AppendElementIfMissing("data", null,
 		        new Dictionary<string, string>()
 		        {
 		            {"scheme",scheme },
 		            {"host",host },
-		        }, intentElement);
+		        }, intentResultElement);
         }
 
 		private void RemoveZarinpalBPFromManifest(){
@@ -84,6 +97,7 @@ namespace Soomla.Store
             if (!StoreSettings.Enable)
             {
                 ZarinpalManifestTools.RemoveActivity("com.kingcodestudio.unityzarinpaliab.ZarinpalActivity");
+                ZarinpalManifestTools.RemoveActivity("com.kingcodestudio.unityzarinpaliab.ZarinpalResultActivity");
             }
 		}
 

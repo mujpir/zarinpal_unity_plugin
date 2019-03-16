@@ -22,7 +22,7 @@ public class ZarinpalEditor : IZarinpalPlatform
     {
         OnPurchaseStarted();
         Log("purchasing amount of : {0} toman , desc : {1} , productID : {2}", amount, desc,productID);
-        var authority = "fake_authority_" + Guid.NewGuid();
+        var authority = "fake_authority_00000000000000000" + Guid.NewGuid();
         PurchasingItemID = productID;
         OnPurchaseSucceed(productID,authority);
         if (AutoVerifyPurchase)

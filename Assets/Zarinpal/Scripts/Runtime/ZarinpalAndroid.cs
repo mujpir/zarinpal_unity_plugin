@@ -8,13 +8,12 @@ public class ZarinpalAndroid : MonoBehaviour,IZarinpalPlatform
     private AndroidJavaClass _zarinpalJavaClass;
     private AndroidJavaObject _zarinpalJavaObject;
     private static ZarinpalAndroid _instance;
+    private static Guid? _transactionID;
 
     public static ZarinpalAndroid CreateInstance()
     {
         if (_instance == null)
         {
-            _instance = FindObjectOfType<ZarinpalAndroid>();
-
             if (_instance == null)
             {
                 _instance = new GameObject("ZarinpalAndroid").AddComponent<ZarinpalAndroid>();
@@ -41,6 +40,7 @@ public class ZarinpalAndroid : MonoBehaviour,IZarinpalPlatform
 
     public void Purchase(long amount,string desc, string productID)
     {
+        _transactionID = Guid.NewGuid();
         PurchasingItemID = productID;
         _zarinpalJavaClass.CallStatic("startPurchaseFlow", amount, productID, desc);
     }
@@ -80,20 +80,40 @@ public class ZarinpalAndroid : MonoBehaviour,IZarinpalPlatform
 
     private void OnPurchaseSucceed(string authority)
     {
-        var handler = PurchaseSucceed;
-        if (handler != null) handler(PurchasingItemID,authority);
+        if (AutoVerifyPurchase)
+        {
+            var handler = PurchaseSucceed;
+            if (handler != null) handler(PurchasingItemID, authority);
+        }
+        else
+        {
+            if (_transactionID.HasValue)
+            {
+                _transactionID = null;
+                var handler = PurchaseSucceed;
+                if (handler != null) handler(PurchasingItemID, authority);
+            }
+        }
     }
 
     private void OnPurchaseFailed(string error)
     {
-        var handler = PurchaseFailed;
-        if (handler != null) handler();
+        if (_transactionID.HasValue)
+        {
+            _transactionID = null;
+            var handler = PurchaseFailed;
+            if (handler != null) handler();
+        }
     }
 
     protected virtual void OnPurchaseCanceled()
     {
-        var handler = PurchaseCanceled;
-        if (handler != null) handler();
+        if (_transactionID.HasValue)
+        {
+            _transactionID = null;
+            var handler = PurchaseCanceled;
+            if (handler != null) handler();
+        }
     }
 
     private void OnPaymentVerificationStarted(string url)
@@ -104,14 +124,22 @@ public class ZarinpalAndroid : MonoBehaviour,IZarinpalPlatform
 
     private void OnPaymentVerificationSucceed(string refID)
     {
-        var handler = PaymentVerificationSucceed;
-        if (handler != null) handler(refID);
+        if (_transactionID.HasValue)
+        {
+            _transactionID = null;
+            var handler = PaymentVerificationSucceed;
+            if (handler != null) handler(refID);
+        }
     }
 
     private void OnPaymentVerificationFailed(string error)
     {
-        var handler = PaymentVerificationFailed;
-        if (handler != null) handler();
+        if (_transactionID.HasValue)
+        {
+            _transactionID = null;
+            var handler = PaymentVerificationFailed;
+            if (handler != null) handler();
+        }
     }
 
     #endregion
