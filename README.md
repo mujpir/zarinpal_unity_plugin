@@ -26,7 +26,7 @@ Then zarinpal uses "gt-club://zarinpal_result" uri to return the purchase result
 <h4>3. Update manifest and files.</h4>
 Click on "update manifest and files" button to update your manifest and copy required files into your project.
 
-<h4>4. Initialize the plugin fisrt.
+<h4>4. Initialize the plugin fisrt.</h4>
 Use method <pre> Zarinpal.Initialize() </pre> at the start of your game to makes zarinpal initialized.
 Please note to call it once.
 You can take a look at zarinpal example scene and scripts to see how to use the plugin in your code..
