@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using UnityEngine;
-
+#if UNITY_IOS
 public class ZarinpaliOS : MonoBehaviour,IZarinpalPlatform 
 {
 
@@ -192,3 +192,5 @@ public class ZarinpaliOS : MonoBehaviour,IZarinpalPlatform
 
     #endregion
 }
+
+#endif
